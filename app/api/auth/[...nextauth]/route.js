@@ -12,6 +12,8 @@ const handler = NextAuth({
 	],
 
 	async session({ session }) {
+		await connectDB();
+
 		const sessionUser = await User.findOne({
 			email: session.user.email,
 		});
@@ -28,9 +30,9 @@ const handler = NextAuth({
 			const userExist = await User.findOne({ email: profile.email });
 
 			if (!userExist) {
-				await userExist.create({
+				await User.create({
 					email: profile.email,
-					username: profile.name.replace(" ", "").toLowercase(),
+					username: profile.name.replace(/\s/g, "").toLowercase(),
 					image: profile.picture,
 				});
 			}
