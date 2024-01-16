@@ -113,8 +113,8 @@ const Nav = () => {
 								</Link>
 								<button
 									type="button"
-									onClick={() => setToggleDropdown(false)}
-									className="mt-3 w-full black_btn">
+									onClick={signOut}
+									className="outline_btn">
 									Sign Out
 								</button>
 							</div>
