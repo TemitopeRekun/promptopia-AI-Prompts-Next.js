@@ -11,21 +11,14 @@ const MyProfile = () => {
 
 	useEffect(() => {
 		const fetchPost = async () => {
-			try {
-				const response = await fetch(
-					`/api/users/${session?.user.id}/posts`
-				);
-				if (response.ok) {
-					const data = await response.json();
-					setPosts(data);
-				}
-			} catch (error) {
-				console.log("Error fetching prompts:", error);
-			}
+			const response = await fetch(`/api/users/${session?.user.id}/posts`);
+
+			const data = await response.json();
+			setPosts(data);
 		};
 
 		if (session?.user.id) fetchPost();
-	}, [session?.user.id]);
+	}, []);
 
 	const handleEdit = (post) => {
 		router.push(`/update-prompt?id=${post._id}`);
