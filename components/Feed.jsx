@@ -18,10 +18,37 @@ const PromptCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
-	const [searchText, setSearchText] = useState("");
 	const [posts, setPosts] = useState([]);
+	const [filteredPosts, setFilteredPosts] = useState([]);
+
+	const [searchText, setSearchText] = useState("");
 	const handleSearchChange = (e) => {
-		setSearchText(e.target.value);
+		setSearchText(e);
+		filterPosts(e);
+	};
+
+	const filterPosts = (searchText) => {
+		if (searchText.trim() === "") {
+			setFilteredPosts(posts);
+		} else {
+			const filtered = posts.filter((post) => {
+				const tagsArray = Array.isArray(post.tag) ? post.tag : [post.tag];
+				const tagString = tagsArray.join(" ");
+				return (
+					tagString.toLowerCase().includes(searchText.toLowerCase()) ||
+					post.prompt.toLowerCase().includes(searchText.toLowerCase()) ||
+					post.creator.username
+						.toLowerCase()
+						.includes(searchText.toLowerCase())
+				);
+			});
+			setFilteredPosts(filtered);
+		}
+	};
+
+	const handleTagClick = (tag) => {
+		setSearchText(tag);
+		filterPosts(tag);
 	};
 
 	useEffect(() => {
@@ -31,6 +58,7 @@ const Feed = () => {
 				if (response.ok) {
 					const data = await response.json();
 					setPosts(data);
+					setFilteredPosts(data);
 				}
 			} catch (error) {
 				console.log("Error fetching prompts:", error);
@@ -47,13 +75,20 @@ const Feed = () => {
 					type="text"
 					placeholder="Search for a tag or username"
 					value={searchText}
-					onChange={handleSearchChange}
+					onChange={(e) => handleSearchChange(e.target.value)}
 					required
 					className="search_input peer"
 				/>
 			</form>
 
-			<PromptCardList data={[posts]} handleTagClick={() => {}} />
+			{filterPosts.length > 0 ? (
+				<PromptCardList
+					data={filteredPosts}
+					handleTagClick={handleTagClick}
+				/>
+			) : (
+				<p>No matching prompts found.</p>
+			)}
 		</section>
 	);
 };
