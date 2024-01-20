@@ -16,6 +16,14 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
 		setTimeout(() => setCopied(false), 3000);
 	};
 
+	const handleProfileClick = () => {
+		console.log(post);
+
+		if (post.creator._id === session?.user.id) return router.push("/profile");
+
+		router.push(`/profile/${post.creator._id}?name=${post.creator.username}`);
+	};
+
 	return (
 		<div className="prompt_card">
 			<div className="flex justify-between items-start gap-5">
@@ -28,7 +36,7 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
 						className="rounded-full object-contain"
 					/>
 
-					<div className="flex flex-col">
+					<div className="flex flex-col" onClick={handleProfileClick}>
 						<h3 className="font-satoshi font-semibold text-gray-900">
 							{post.creator.username}
 						</h3>

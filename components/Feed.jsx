@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import PromptCard from "./PromptCard";
 
-const PromptCardList = ({ data, handleTagClick }) => {
+export const PromptCardList = ({ data, handleTagClick }) => {
 	return (
 		<div className="mt-16 prompt_layout">
 			{data.map((post) => (
@@ -20,6 +21,7 @@ const PromptCardList = ({ data, handleTagClick }) => {
 const Feed = () => {
 	const [posts, setPosts] = useState([]);
 	const [filteredPosts, setFilteredPosts] = useState([]);
+	const router = useRouter();
 
 	const [searchText, setSearchText] = useState("");
 	const handleSearchChange = (e) => {
@@ -50,6 +52,8 @@ const Feed = () => {
 		setSearchText(tag);
 		filterPosts(tag);
 	};
+
+	
 
 	useEffect(() => {
 		const fetchPost = async () => {
